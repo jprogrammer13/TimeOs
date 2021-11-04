@@ -1,5 +1,5 @@
-#ifndef OSW_PINS_H
-#define OSW_PINS_H
+#ifndef __OSW_PINS_H__
+#define __OSW_PINS_H__
 
 // pin mapping
 #define TFT_CS 5
@@ -7,7 +7,7 @@
 #define TFT_RST 33
 #define TFT_SCK 18
 #define TFT_MOSI 23
-#define TFT_MISO -1  // no data coming back
+#define TFT_MISO -1 // no data coming back
 #define TFT_LED 9
 #endif
 
@@ -39,4 +39,3 @@
 
 #define STAT_PWR 15
 #define B_MON 25
-

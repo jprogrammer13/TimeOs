@@ -1,6 +1,6 @@
 
-#ifndef _ARDUINO_CANVAS_EXT_H_
-#define _ARDUINO_CANVAS_EXT_H_
+#ifndef __ARDUINO_CANVAS_EXT_H__
+#define __ARDUINO_CANVAS_EXT_H__
 
 #include <Arduino.h>
 #include <Arduino_DataBus.h>
@@ -19,8 +19,11 @@ public:
 
     //   CUSTOM FUNCTION
     void drawThickLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t radius, uint16_t color, bool highQuality = false);
+    void drawArc(int32_t cx, int32_t cy, float start, float stop, uint16_t radius, uint8_t lineRadius,uint16_t color,uint16_t steps = 100, bool highQuality = false);
+    //
 
-        protected : uint16_t *_framebuffer;
+protected:
+    uint16_t *_framebuffer;
     Arduino_G *_output;
     int16_t _output_x, _output_y;
 

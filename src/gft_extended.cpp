@@ -2,6 +2,7 @@
 #include <Arduino_DataBus.h>
 #include <Arduino_GFX.h>
 #include <gfx_extend.h>
+#include <math_angles.h>
 
 Arduino_Canvas_EXT::Arduino_Canvas_EXT(int16_t w, int16_t h, Arduino_G *output, int16_t output_x, int16_t output_y)
     : Arduino_GFX(w, h), _output(output), _output_x(output_x), _output_y(output_y)
@@ -223,5 +224,27 @@ void Arduino_Canvas_EXT::drawThickLine(int16_t x1, int16_t y1, int16_t x2, int16
             y += (uint16_t)ystep;
             err += (uint16_t)dx;
         }
+    }
+}
+
+void Arduino_Canvas_EXT::drawArc(int32_t cx, int32_t cy, float start, float stop, uint16_t radius, uint8_t lineRadius, uint16_t color, uint16_t steps, bool highQuality)
+{
+    int32_t x1 = rpx(cx, radius, start);
+    int32_t y1 = rpy(cy, radius, start);
+    // printf("\ndraw from %f,%f in %d steps", start, stop, steps);
+
+    float arcLength = stop - start;
+
+    for (uint16_t i = 1; i <= steps; i++)
+    {
+        float segmentLength = i * (arcLength / steps);
+        // printf("\n rpx(%d, %d, %f +  %f)", cx, radius, start, segmentLength);
+
+        int32_t x2 = rpx(cx, radius, start + segmentLength);
+        int32_t y2 = rpy(cy, radius, start + segmentLength);
+        // printf("\n gfx2d.drawLine(%d, %d, %d, %d, color);", x1, y1, x2, y2);
+        drawThickLine(x1, y1, x2, y2, lineRadius, color, highQuality);
+        x1 = x2;
+        y1 = y2;
     }
 }
