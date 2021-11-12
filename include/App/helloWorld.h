@@ -6,8 +6,8 @@ class HelloWorld : public App
 {
 public:
     HelloWorld(){};
-    HelloWorld(Navigation *_navigation, Arduino_Canvas_EXT *_gfx);
-    void draw_main();
+    HelloWorld(Navigation *_navigation, Arduino_Canvas_EXT *_gfx,TimeCLock *_time, SystemUi *_sysUi);
+    void draw();
     void draw_widget(){};
     void background(){};
 

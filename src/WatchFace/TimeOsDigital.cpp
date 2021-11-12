@@ -3,17 +3,18 @@
 #include <WatchFace/TimeOsDigital.h>
 #define step 3
 
-TimeOsDigital::TimeOsDigital(Navigation *_navigation, Arduino_Canvas_EXT *_gfx, TimeCLock *_time) : WatchFace(_navigation, _gfx, _time)
+TimeOsDigital::TimeOsDigital(Navigation *_navigation, Arduino_Canvas_EXT *_gfx, TimeCLock *_time, SystemUi *_sysUi) : WatchFace(_navigation, _gfx, _time, _sysUi)
 {
-
     gfx->setFont(&Poppins_Medium50pt7b);
 };
 
 void TimeOsDigital::draw()
 {
 
-    uint32_t h1 = time->getHour() / 10;
-    uint32_t h2 = time->getHour() % 10;
+    uint32_t m1 = time->getMinute() / 10;
+    uint32_t m2 = time->getMinute() % 10;
+    uint32_t hour = time->getHour();
+    uint32_t day = time->getDay();
 
     gfx->fillScreen(BLACK);
     // INITIAL TICK
@@ -24,10 +25,13 @@ void TimeOsDigital::draw()
     // custom black
     gfx->fillCircle(120, 120, 100, BLACK);
 
-    // Time Data
+    // TIME
+
+    // Minute
+    gfx->setFont(&Poppins_Medium50pt7b);
     gfx->setTextColor(rgb565(212, 212, 212));
 
-    if (h1 == 1)
+    if (m1 == 1)
     {
         gfx->setCursor(71, 155); // for one
     }
@@ -35,9 +39,9 @@ void TimeOsDigital::draw()
     {
         gfx->setCursor(55, 155); // for normal
     }
-    gfx->println(h1);
+    gfx->println(m1);
 
-    if (h2 == 1)
+    if (m2 == 1)
     {
         gfx->setCursor(136, 155); // for one
     }
@@ -45,7 +49,26 @@ void TimeOsDigital::draw()
     {
         gfx->setCursor(120, 155); // for normal
     }
-    gfx->println(h2);
+    gfx->println(m2);
+
+    // Date
+
+    gfx->setFont(&Poppins_Medium9pt7b);
+    gfx->setTextColor(rgb565(212, 212, 212));
+
+    gfx->setCursor(160, 65);
+    String date = (time->getWeekDayStr().substring(0, 3)) + " " + (((day) < 10) ? "0" + String(day) : String(day));
+    gfx->print(date);
+
+    gfx->drawThickLine(162, 73, 215, 73, 1, RED);
+
+    // Hour
+
+    gfx->setFont(&Poppins_Medium17pt7b);
+    gfx->setTextColor(rgb565(212, 212, 212));
+
+    gfx->setCursor(190, 110);
+    gfx->print(((hour < 10) ? "0" + String(hour) : hour));
 
     // line and details
     for (int i = 0; i < 15; i++)
@@ -61,4 +84,9 @@ void TimeOsDigital::draw()
     gfx->drawArc(120, 120, 275, 325, 90, 1, rgb565(33, 33, 33), 100, true);
 
     gfx->flush();
+
+    if (navigation->get_action() == BACK)
+    {
+        sysUi->setApp("HelloWord");
+    }
 }

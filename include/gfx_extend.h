@@ -5,6 +5,7 @@
 #include <Arduino.h>
 #include <Arduino_DataBus.h>
 #include <Arduino_GFX.h>
+#include <pin.h>
 #include <utils.h>
 
 class Arduino_Canvas_EXT : public Arduino_GFX

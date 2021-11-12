@@ -5,6 +5,7 @@ TimeCLock::TimeCLock(){};
 TimeCLock::TimeCLock(RtcDS3231<TwoWire> *_Rtc)
 {
     this->Rtc = _Rtc;
+    dateTime = RtcDateTime();
 };
 
 void TimeCLock::begin()
@@ -12,20 +13,10 @@ void TimeCLock::begin()
     Wire.begin(SDA, SCL, 100000L);
     Rtc->Begin();
     Rtc->Enable32kHzPin(false);
-    if (!Rtc->LastError())
-    {
-        Rtc->SetSquareWavePin(DS3231SquareWavePin_ModeNone);
-        RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-
-        if (!Rtc->IsDateTimeValid())
-        {
-            Rtc->SetDateTime(compiled);
-        }
-        if (!Rtc->GetIsRunning())
-        {
-            Rtc->SetIsRunning(true);
-        }
-    }
+    Rtc->SetSquareWavePin(DS3231SquareWavePin_ModeNone);
+    RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+    Rtc->SetDateTime(compiled);
+    Rtc->SetIsRunning(true);
 }
 
 uint32_t TimeCLock::getTime()
@@ -35,20 +26,48 @@ uint32_t TimeCLock::getTime()
 
 uint32_t TimeCLock::getHour()
 {
-    RtcDateTime d = RtcDateTime();
-    d.InitWithEpoch32Time(getTime());
-    return d.Hour();
+    dateTime.InitWithEpoch32Time(getTime());
+    return dateTime.Hour();
 }
 
 uint32_t TimeCLock::getMinute()
 {
-    RtcDateTime d = RtcDateTime();
-    d.InitWithEpoch32Time(getTime());
-    return d.Minute();
+    dateTime.InitWithEpoch32Time(getTime());
+    return dateTime.Minute();
 }
+
 uint32_t TimeCLock::getSecond()
 {
-    RtcDateTime d = RtcDateTime();
-    d.InitWithEpoch32Time(getTime());
-    return d.Second();
+    dateTime.InitWithEpoch32Time(getTime());
+    return dateTime.Second();
+}
+
+uint32_t TimeCLock::getDay()
+{
+    dateTime.InitWithEpoch32Time(getTime());
+    return dateTime.Day();
+}
+
+uint32_t TimeCLock::getMonth()
+{
+    dateTime.InitWithEpoch32Time(getTime());
+    return dateTime.Month();
+}
+
+uint32_t TimeCLock::getYear()
+{
+    dateTime.InitWithEpoch32Time(getTime());
+    return dateTime.Year();
+}
+
+uint32_t TimeCLock::getWeekDay()
+{
+    dateTime.InitWithEpoch32Time(getTime());
+    return dateTime.DayOfWeek();
+}
+
+String TimeCLock::getWeekDayStr()
+{
+    String day[] = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
+    return day[this->getWeekDay()];
 }
